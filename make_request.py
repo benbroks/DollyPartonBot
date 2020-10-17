@@ -1,13 +1,11 @@
 import requests
 import urllib.parse
 import os
+import datetime
 
 import oauth2 as oauth
 from requests_oauthlib import OAuth1
 # from config import API_KEY, API_SECRET_KEY, OAUTH_TOKEN, OAUTH_TOKEN_SECRET
-
-
-
 
 os.environ.get('API_KEY')
 os.environ.get('API_SECRET_KEY')
@@ -84,8 +82,26 @@ def tweet(msg):
     OAUTH_TOKEN=os.environ.get('OAUTH_TOKEN')
     OAUTH_TOKEN_SECRET=os.environ.get('OAUTH_TOKEN_SECRET')
     auth = OAuth1(API_KEY, API_SECRET_KEY, OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
-    r = requests.post(tweet_url,auth=auth,data={"status":msg})
+    requests.post(tweet_url,auth=auth,data={"status":msg})
+
+def determine_msg():
+    time = datetime.datetime.utcnow()
+    day_of_week = time.weekday()
+    hour = time.hour
+    if day_of_week < 5 and (hour >= 21 or hour == 0):
+        return True, hour
+    return False, -1
 
 if __name__ == "__main__":
-    msg = "working hard or hardly working? {}".format(spotify_url)
-    tweet(msg)
+    status, h = determine_msg()
+    if status:
+        if h == 21:
+            timezone = "Eastern"
+        elif h == 22:
+            timezone = "Central"
+        elif h == 23:
+            timezone = "Mountain"
+        else:
+            timezone = "Pacific"
+        msg = "Thank Dolly Parton for the end of the ({}) workday. {}".format(timezone,spotify_url)
+        tweet(msg)
