@@ -4,20 +4,27 @@ import random
 import time
 import urllib.parse
 import sys
+import os
 
-from config import API_KEY, API_SECRET_KEY, OAUTH_TOKEN, OAUTH_TOKEN_SECRET
+# from config import API_KEY, API_SECRET_KEY, OAUTH_TOKEN, OAUTH_TOKEN_SECRET
 from requests_oauthlib import OAuth1
 
 import oauth2 as oauth
 
-consumer_key = API_KEY
-consumer_secret = API_SECRET_KEY
+os.environ.get('API_KEY')
+os.environ.get('API_SECRET_KEY')
+os.environ.get('OAUTH_TOKEN')
+os.environ.get('OAUTH_TOKEN_SECRET')
+consumer_key = os.environ.get('API_KEY')
+consumer_secret = os.environ.get('API_SECRET_KEY')
 
 request_token_url = 'https://api.twitter.com/oauth/request_token'
 access_token_url = 'https://api.twitter.com/oauth/access_token'
 authorize_url = 'https://api.twitter.com/oauth/authorize'
 
 tweet_url = 'https://api.twitter.com/1.1/statuses/update.json'
+
+spotify_url = "https://open.spotify.com/track/4w3tQBXhn5345eUXDGBWZG?si=WdxiaUBjTdKREsQ7g3qiLA"
 
 def authorize():
     consumer = oauth.Consumer(consumer_key, consumer_secret)
@@ -74,12 +81,13 @@ def authorize():
     print ("You may now access protected resources using the access tokens above.") 
 
 def tweet(msg):
+    API_KEY=os.environ.get('API_KEY')
+    API_SECRET_KEY=os.environ.get('API_SECRET_KEY')
+    OAUTH_TOKEN=os.environ.get('OAUTH_TOKEN')
+    OAUTH_TOKEN_SECRET=os.environ.get('OAUTH_TOKEN_SECRET')
     auth = OAuth1(API_KEY, API_SECRET_KEY, OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
     r = requests.post(tweet_url,auth=auth,data={"status":msg})
-    print(r.json())
-
-
 
 if __name__ == "__main__":
-    msg = " ".join(sys.argv[1:])
+    msg = "working hard or hardly working? {}".format(spotify_url)
     tweet(msg)
