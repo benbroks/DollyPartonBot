@@ -1,15 +1,13 @@
-import base64
 import requests
-import random
-import time
 import urllib.parse
-import sys
 import os
 
-# from config import API_KEY, API_SECRET_KEY, OAUTH_TOKEN, OAUTH_TOKEN_SECRET
-from requests_oauthlib import OAuth1
-
 import oauth2 as oauth
+from requests_oauthlib import OAuth1
+# from config import API_KEY, API_SECRET_KEY, OAUTH_TOKEN, OAUTH_TOKEN_SECRET
+
+
+
 
 os.environ.get('API_KEY')
 os.environ.get('API_SECRET_KEY')
