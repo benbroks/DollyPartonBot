@@ -88,7 +88,9 @@ def determine_msg():
     time = datetime.datetime.utcnow()
     day_of_week = time.weekday()
     hour = time.hour
-    if day_of_week < 5 and (hour >= 21 or hour == 0):
+    if day_of_week >= 1 and day_of_week <6 and hour == 0:
+        return True, hour
+    if day_of_week < 5 and hour >= 21:
         return True, hour
     return False, -1
 
