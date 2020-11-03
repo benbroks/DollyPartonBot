@@ -22,6 +22,8 @@ tweet_url = 'https://api.twitter.com/1.1/statuses/update.json'
 
 spotify_url = "https://open.spotify.com/track/4w3tQBXhn5345eUXDGBWZG?si=WdxiaUBjTdKREsQ7g3qiLA"
 
+time_url = "https://worldtimeapi.org/api/timezone/America/New_York"
+
 def authorize():
     consumer = oauth.Consumer(consumer_key, consumer_secret)
     client = oauth.Client(consumer)
@@ -85,23 +87,27 @@ def tweet(msg):
     requests.post(tweet_url,auth=auth,data={"status":msg})
 
 def determine_msg():
-    time = datetime.datetime.utcnow()
-    day_of_week = time.weekday()
-    hour = time.hour
-    if day_of_week >= 1 and day_of_week <6 and hour == 0:
-        return True, hour
-    if day_of_week < 5 and hour >= 21:
-        return True, hour
-    return False, -1
+    try:
+        tz_check = requests.get(time_url)
+        day_of_week = tz_check.json().get('day_of_week')
+        hour = tz_check.json().get('datetime')
+        hour = int(hour[hour.find('T')+1:hour.find('T')+3])
+        print(day_of_week,hour)
+        if day_of_week < 5 and hour >= 17 and hour <= 20:
+            return True, hour
+        return False, -1
+    except Exception as e:
+        print('!!! Error getting timezone', e)
+        return False, -1
 
 if __name__ == "__main__":
     status, h = determine_msg()
     if status:
-        if h == 21:
+        if h == 17:
             timezone = "Eastern"
-        elif h == 22:
+        elif h == 18:
             timezone = "Central"
-        elif h == 23:
+        elif h == 19:
             timezone = "Mountain"
         else:
             timezone = "Pacific"
