@@ -93,7 +93,7 @@ def determine_msg():
         hour = tz_check.json().get('datetime')
         hour = int(hour[hour.find('T')+1:hour.find('T')+3])
         print(day_of_week,hour)
-        if day_of_week < 5 and hour >= 17 and hour <= 20:
+        if day_of_week >= 1 and day_of_week <= 5 and hour >= 17 and hour <= 20:
             return True, hour
         return False, -1
     except Exception as e:
